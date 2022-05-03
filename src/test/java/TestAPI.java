@@ -7,7 +7,12 @@ import org.testng.annotations.Test;
 import requests.RequestToCreateNewUser;
 import responses.ResponseOfNewUser;
 
-import java.time.Clock;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.util.Date;
 
 import static io.restassured.RestAssured.baseURI;
 import static io.restassured.RestAssured.given;
@@ -25,7 +30,7 @@ public class TestAPI {
 
     public void getSingleUserer() {
         Specifications.installSpecification(Specifications.requestSpecification(baseURI),
-                Specifications.responseSpecification200ok());
+                Specifications.responseSpecification(200));
         SingleUser user = given()
                 .when()
                 .get("api/users/2")
@@ -44,7 +49,7 @@ public class TestAPI {
 
     public void createNewUser() {
         Specifications.installSpecification(Specifications.requestSpecification(baseURI),
-                Specifications.responseSpecification201ok());
+                Specifications.responseSpecification(201));
 
         RequestToCreateNewUser user = RequestToCreateNewUser.builder()
                 .name("morpheus")
@@ -61,11 +66,12 @@ public class TestAPI {
                 .extract().response().as(ResponseOfNewUser.class);
 
         System.out.println(createdUser.toString());
+
     }
 
     @Test
     public void SuccessfulRegistration() {
-        Specifications.installSpecification(Specifications.requestSpecification(baseURI), Specifications.responseSpecification200ok());
+        Specifications.installSpecification(Specifications.requestSpecification(baseURI), Specifications.responseSpecification(200));
 
         Register register = Register.builder()
                 .email("eve.holt@reqres.in")
@@ -89,7 +95,26 @@ public class TestAPI {
 
         String regex = "(.{5})$"; // regular expression to get substrring from site regex101
         String currentTime = Clock.systemUTC().instant().toString().replaceAll(regex,"");
+        String currentTime2 = Clock.systemUTC().instant().toString();
+
+
+
+        ZoneId madrid = ZoneId.of("Asia/Jerusalem");
+        Clock mad = Clock.system(madrid);
+
         System.out.println(currentTime);
+        System.out.println(currentTime2);
+        System.out.println(mad.getZone());
+
+        String dateFormatter = "dd-MMM-yyyy HH:mm:ss";
+        LocalDateTime date = LocalDateTime.now();
+        System.out.println("Current Time " + date);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateFormatter);
+        String formatDateTime = date.format(formatter);
+        System.out.println("Formatted Time :" + formatDateTime);
+
+
     }
 
 

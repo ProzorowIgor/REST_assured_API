@@ -5,6 +5,7 @@ import org.testng.annotations.Test;
 import responses.ResponseGetAllUsers;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static io.restassured.RestAssured.given;
 
@@ -30,6 +31,15 @@ public class ApiTestReqresRESTassured {
                 .extract().body().jsonPath().getList("data", DataUser.class);
         int a = 0;
         myUsers.forEach(x -> Assert.assertTrue(x.getAvatar().contains(x.getId().toString())));
+        Assert.assertTrue(myUsers.stream().allMatch(x -> x.getEmail().endsWith("reqres.in")));
+        myUsers.forEach(x -> System.out.println("This is id of one single user " + x.getId()));
+
+       /* List<String> avatars = myUsers.stream().map(DataUser::getAvatar).collect(Collectors.toList());
+        List<String> ids = myUsers.stream().map(x->x.getId().toString()).collect(Collectors.toList());
+
+        for (int i = 0;i<avatars.size();i++){
+            Assert.assertTrue(avatars.get(i).contains(ids.get(i)));
+        }*/
     }
 
     @Test
